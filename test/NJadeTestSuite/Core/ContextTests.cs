@@ -1,10 +1,10 @@
-﻿#if NUNIT
-using NJade.Core;
-using NUnit.Framework;
-
-namespace NJade.Tests
+﻿namespace NJadeTestSuite.Core
 {
-	/// <summary>
+    using NJade.Core;
+
+    using NUnit.Framework;
+
+    /// <summary>
 	/// Tests for <see cref="Context"/>.
 	/// </summary>
 	[TestFixture]
@@ -30,23 +30,22 @@ namespace NJade.Tests
 
 			public Item(string name)
 			{
-				_name = name;
+				this._name = name;
 			}
 
 			public int NameCalls
 			{
-				get { return _nameCalls; }
+				get { return this._nameCalls; }
 			}
 
 			public string Name
 			{
 				get
 				{
-					++_nameCalls;
-					return _name;
+					++this._nameCalls;
+					return this._name;
 				}
 			}
 		}
 	}
 }
-#endif

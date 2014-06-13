@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
-using NJade.Core;
-using NUnit.Framework;
-#if NUNIT
-
-namespace NJade.Tests
+﻿namespace NJadeTestSuite.Core
 {
-	[TestFixture]
+    using System.Collections.Generic;
+
+    using NJade.Core;
+
+    using NUnit.Framework;
+
+    [TestFixture]
 	public class EvalTests
 	{
 		[Test]
@@ -80,12 +81,12 @@ namespace NJade.Tests
 
 			public Data1(object value)
 			{
-				_value = value;
+				this._value = value;
 			}
 
 			public object Value()
 			{
-				return _value;
+				return this._value;
 			}
 		}
 
@@ -95,11 +96,10 @@ namespace NJade.Tests
 
 			public Data2(object value)
 			{
-				Value = value;
+				this.Value = value;
 			}
 		}
 
 		#endregion
 	}
 }
-#endif
