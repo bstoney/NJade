@@ -4,6 +4,7 @@ build
 packages
 gh-pages
 .nuget
+TestResults
 
 *.suo
 *.user
