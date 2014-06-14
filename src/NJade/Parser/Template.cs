@@ -3,14 +3,14 @@ namespace NJade.Parser
     using System.Collections.Generic;
     using System.Linq;
 
-    using NJade.Lexer.Tokenizer;
     using NJade.Lexer;
+    using NJade.Lexer.Tokenizer;
     using NJade.Parser.Elements;
 
     /// <summary>
     /// Defines the Template class.
     /// </summary>
-    public class Template
+    internal class Template : ITemplate
     {
         /// <summary>
         /// Initialises a new instance of the <see cref="Template" /> class.

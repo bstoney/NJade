@@ -82,7 +82,7 @@ namespace NJade.Render
         /// <returns>The encoded text.</returns>
         public static string XmlEncode(string text)
         {
-            if (text != null)
+            if (!string.IsNullOrWhiteSpace(text))
             {
                 var sb = new StringBuilder(text);
                 sb.Replace("&", "&amp;");
@@ -133,13 +133,6 @@ namespace NJade.Render
             this.NewLine();
             this.Write("<?", name, " ", value, "?>");
             this.needsNewLine = true;
-        }
-
-        /// <summary>
-        /// </summary>
-        public void OnHandleSomeEventName()
-        {
-            
         }
 
         /// <summary>

@@ -25,7 +25,7 @@
         /// Gets the jade template.
         /// </summary>
         /// <returns>A new jade template.</returns>
-        public Template GetJadeTemplate()
+        public ITemplate GetJadeTemplate()
         {
             var tokens = new TokenStream(this.lexer.Tokenize());
             var jadeTemplate = Template.Produce(tokens);

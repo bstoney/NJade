@@ -1,13 +1,10 @@
 ﻿namespace NJade.Render
 {
-    using System;
     using System.IO;
-    using System.Linq;
     using System.Monads;
     using System.Text;
 
     using NJade.Parser;
-    using NJade.Parser.Elements;
 
     /// <summary>
     /// Defines the StringRenderer class.
@@ -17,13 +14,13 @@
         /// <summary>
         /// The jade template
         /// </summary>
-        private readonly Template template;
+        private readonly ITemplate template;
 
         /// <summary>
         /// Initialises a new instance of the <see cref="StringRenderer" /> class.
         /// </summary>
         /// <param name="template">The jade template.</param>
-        public StringRenderer(Template template)
+        public StringRenderer(ITemplate template)
         {
             template.CheckNull("template");
             this.template = template;
@@ -32,6 +29,7 @@
         /// <summary>
         /// Renders the specified writer.
         /// </summary>
+        /// <returns>A string.</returns>
         public string Render()
         {
             var sb = new StringBuilder();

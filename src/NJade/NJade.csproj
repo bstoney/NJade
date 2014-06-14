@@ -46,17 +46,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Ast\DocTypeNode.cs" />
-    <Compile Include="Ast\JadeTemplate.cs" />
-    <Compile Include="Ast\JAttribute.cs" />
-    <Compile Include="Ast\JComment.cs" />
-    <Compile Include="Ast\JTag.cs" />
-    <Compile Include="Ast\JNode.cs" />
-    <Compile Include="Ast\TextNode.cs" />
     <Compile Include="Core\CachedDataRecord.cs" />
     <Compile Include="Core\Context.cs" />
     <Compile Include="Core\Evaluator.cs" />
-    <Compile Include="Jade.cs" />
     <Compile Include="Lexer\JadeLexer.cs" />
     <Compile Include="Lexer\JadeTokenType.cs" />
     <Compile Include="Lexer\Matcher\IMatcher.cs" />
@@ -89,6 +81,7 @@
     <Compile Include="Parser\Elements\JMixin.cs" />
     <Compile Include="Parser\Elements\JTag.cs" />
     <Compile Include="Parser\Elements\JText.cs" />
+    <Compile Include="Parser\ITemplate.cs" />
     <Compile Include="Parser\JadeParser.cs" />
     <Compile Include="Parser\Template.cs" />
     <Compile Include="Parser\TokenExtensions.cs" />

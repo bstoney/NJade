@@ -95,6 +95,37 @@
         }
 
         /// <summary>
+        /// Tests that the XML writer should only encode ampersand character once.
+        /// </summary>
+        [TestMethod]
+        public void ShouldOnlyEncodeAmpersandCharacterOnce()
+        {
+            Assert.AreEqual("&amp;&quot;", XmlWriter.XmlEncode("&\""));
+        }
+
+        /// <summary>
+        /// Tests that the XML writer should return null when encoding null.
+        /// </summary>
+        [TestMethod]
+        public void ShouldReturnNullWhenEncodingNull()
+        {
+            Assert.AreEqual(null, XmlWriter.XmlEncode(null));
+        }
+
+        /// <summary>
+        /// Tests that the XML writer should retrun the same value when encoding whitespace or an empty string.
+        /// </summary>
+        [TestMethod]
+        public void ShouldRetrunTheSameValueWhenEncodingWhitespaceOrAnEmptyString()
+        {
+            var emptyString = string.Empty;
+            Assert.IsTrue(ReferenceEquals(emptyString, XmlWriter.XmlEncode(emptyString)));
+
+            var whiteSpace = " \t\n\r";
+            Assert.IsTrue(ReferenceEquals(whiteSpace, XmlWriter.XmlEncode(whiteSpace)));
+        }
+
+        /// <summary>
         /// Tests that the XML writer should write the new line characters when new line is called.
         /// </summary>
         [TestMethod]

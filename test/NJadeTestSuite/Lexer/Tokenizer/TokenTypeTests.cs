@@ -16,9 +16,12 @@
         [TestMethod]
         public void ShouldBeEqualWhenCompared()
         {
-            Assert.AreEqual(TokenType.Eof, TokenType.Eof);
-            Assert.IsTrue(TokenType.Eof == TokenType.Eof);
-            Assert.IsFalse(TokenType.Eof == TokenType.Word);
+            var eof1 = TokenType.Eof;
+            var eof2 = TokenType.Eof;
+            var word = TokenType.Word;
+            Assert.AreEqual(eof1, eof2);
+            Assert.IsTrue(eof1 == eof2);
+            Assert.IsFalse(eof1 == word);
         }
 
         /// <summary>

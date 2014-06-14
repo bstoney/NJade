@@ -40,7 +40,7 @@
         /// Renders the specified writer.
         /// </summary>
         /// <param name="writer">The writer.</param>
-        internal void Render(XmlWriter writer)
+        internal virtual void Render(XmlWriter writer)
         {
             switch (this.type)
             {
