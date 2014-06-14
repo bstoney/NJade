@@ -11,7 +11,7 @@
     public class JadeLexer : StringLexer
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="JadeLexer"/> class.
+        /// Initialises a new instance of the <see cref="JadeLexer"/> class.
         /// </summary>
         /// <param name="source">The source.</param>
         public JadeLexer(string source)
@@ -26,7 +26,7 @@
         /// <returns>A string.</returns>
         private static string Normalize(string source)
         {
-            return source.Replace("\r", "");
+            return source.Replace("\r", string.Empty);
         }
 
         /// <summary>

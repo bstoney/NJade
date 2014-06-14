@@ -68,9 +68,11 @@
     <Compile Include="Lexer\StringLexerTests.cs" />
     <Compile Include="Lexer\Tokenizer\Strings\StringTokenizerTests.cs" />
     <Compile Include="Lexer\Tokenizer\Strings\TokenLocationTests.cs" />
+    <Compile Include="Lexer\Tokenizer\Strings\StringTokenTests.cs" />
     <Compile Include="Lexer\Tokenizer\TokenizableStreamBaseTests.cs" />
     <Compile Include="Lexer\Tokenizer\TokenTests.cs" />
     <Compile Include="Lexer\Tokenizer\TokenTypeTests.cs" />
+    <Compile Include="Lexer\JadeLexerTests.cs" />
     <Compile Include="NJadeExceptionTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Renderer\StringRendererTests.cs" />
