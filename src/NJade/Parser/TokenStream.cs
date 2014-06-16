@@ -12,7 +12,7 @@ namespace NJade.Parser
     public class TokenStream : TokenizableStreamBase<StringToken> //// TODO (maybe), IEnumerable<Token>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="TokenStream"/> class.
+        /// Initialises a new instance of the <see cref="TokenStream"/> class.
         /// </summary>
         /// <param name="tokens">The tokens.</param>
         public TokenStream(IEnumerable<StringToken> tokens)

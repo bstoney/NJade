@@ -5,9 +5,9 @@ namespace NJade.Parser
     using System.Monads;
     using System.Text;
 
+    using NJade.Lexer;
     using NJade.Lexer.Tokenizer;
     using NJade.Parser.Elements;
-    using NJade.Lexer;
 
     /// <summary>
     /// Defines the TokenExtensions class.
