@@ -17,6 +17,30 @@ namespace NJade.Parser
     internal static class TokenExtensions
     {
         /// <summary>
+        /// Gets the underlying string value of the stream without consuming the tokens.
+        /// </summary>
+        /// <param name="tokens">The tokens.</param>
+        /// <returns>A string</returns>
+        public static string AsString(this TokenStream tokens)
+        {
+            tokens.TakeSnapshot();
+            var sb = new StringBuilder();
+            try
+            {
+                while (!tokens.IsAtEnd())
+                {
+                    sb.Append(tokens.Get());
+                }
+            }
+            finally
+            {
+                tokens.RollbackSnapshot();
+            }
+
+            return sb.ToString();
+        }
+
+        /// <summary>
         /// Raises an unexpected token exception.
         /// </summary>
         /// <param name="tokens">The tokens.</param>
@@ -83,12 +107,13 @@ namespace NJade.Parser
         /// </summary>
         /// <param name="tokens">The tokens.</param>
         /// <returns>The value of all the tokens in the line.</returns>
-        public static string GetLine(this TokenStream tokens)
+        public static TokenStream GetLine(this TokenStream tokens)
         {
-            var sb = new StringBuilder();
+            var line = new List<StringToken>();
             while (!tokens.IsAtEnd() && !tokens.Is(JadeTokenType.NewLine))
             {
-                sb.Append(tokens.Get());
+                line.Add(tokens.Current);
+                tokens.Consume();
             }
 
             if (!tokens.IsAtEnd())
@@ -96,7 +121,7 @@ namespace NJade.Parser
                 tokens.Consume();
             }
 
-            return sb.ToString();
+            return new TokenStream(line);
         }
 
         /// <summary>
@@ -198,6 +223,22 @@ namespace NJade.Parser
             }
 
             return items;
+        }
+
+        /// <summary>
+        /// Gets the lines.
+        /// </summary>
+        /// <param name="tokens">The tokens.</param>
+        /// <returns>A list of the lines.</returns>
+        public static List<TokenStream> GetLines(this TokenStream tokens)
+        {
+            var lines = new List<TokenStream>();
+            while (!tokens.IsAtEnd())
+            {
+                lines.Add(tokens.GetLine());
+            }
+
+            return lines;
         }
 
         ////    /// <summary>

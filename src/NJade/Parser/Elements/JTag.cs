@@ -97,12 +97,12 @@ namespace NJade.Parser.Elements
 
             if (tokens.Is(JadeTokenType.InlineValue))
             {
-                content = new JExpression(tokens.GetLine());
+                content = new JExpression(tokens.GetLine().AsString());
             }
             else if (tokens.Is(TokenType.WhiteSpace))
             {
                 tokens.Consume();
-                content = new JText(tokens.GetLine());
+                content = new JText(tokens.GetLine().AsString());
             }
             else if (tokens.Is(JadeTokenType.Block))
             {
@@ -227,7 +227,7 @@ namespace NJade.Parser.Elements
                     blockIndent = tokens.Current.TokenValue.Length;
                 }
 
-                sb.AppendLine(tokens.GetLine().Substring(blockIndent.Value));
+                sb.AppendLine(tokens.GetLine().AsString().Substring(blockIndent.Value));
             }
 
             return sb.ToString().TrimEnd();

@@ -16,10 +16,10 @@
     using NJadeTestSuite.TestHelper;
 
     /// <summary>
-    /// Defines the TokenExtensionsTests class.
+    /// Defines the TokenStreamExtensionsTests class.
     /// </summary>
     [TestClass]
-    public class TokenExtensionsTests
+    public class TokenStreamExtensionsTests
     {
         /// <summary>
         /// Tests that the token extensions should raise an unexpcected token exception.
@@ -149,7 +149,7 @@
             var tokens = new Mock<TokenStream>((IEnumerable<StringToken>)new[]
                                                    {
                                                        new StringToken(TokenType.Word, 1, 1, 1, "hello"),
-                                                       new StringToken(TokenType.WhiteSpace, 1, 1, 1, "hello"),
+                                                       new StringToken(TokenType.WhiteSpace, 1, 1, 1, "hello")
                                                    });
             tokens.CallBase = true;
             Assert.AreEqual("hellohello", tokens.Object.GetLine());

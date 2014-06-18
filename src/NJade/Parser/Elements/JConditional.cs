@@ -52,7 +52,7 @@ namespace NJade.Parser.Elements
         {
             tokens.Get(JadeTokenType.If);
             tokens.Get(TokenType.WhiteSpace);
-            var expression = new JExpression(tokens.GetLine());
+            var expression = new JExpression(tokens.GetLine().AsString());
             var trueElements = tokens.GetItems(indent).ToList();
             var falseElements = Enumerable.Empty<JElement>();
 
