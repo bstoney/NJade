@@ -112,7 +112,7 @@ namespace NJade.Parser.Elements
             else if (tokens.Is(JadeTokenType.Colon))
             {
                 tokens.Consume();
-                tokens.ConsumeAny(TokenType.WhiteSpace);
+                tokens.GetAny(TokenType.WhiteSpace);
                 elements.Add(Produce(tokens, indent));
             }
             else
@@ -122,7 +122,7 @@ namespace NJade.Parser.Elements
                     tokens.Get();
                 }
 
-                tokens.Get(JadeTokenType.NewLine);
+                tokens.GetAny(JadeTokenType.NewLine);
                 elements.AddRange(tokens.GetItems(indent));
             }
 
@@ -194,12 +194,12 @@ namespace NJade.Parser.Elements
                 if (tokens.Is(JadeTokenType.Dot))
                 {
                     tokens.Consume();
-                    classes.Add(tokens.Get(TokenType.Word));
+                    classes.Add(tokens.GetAny(TokenType.Word));
                 }
                 else if (id == null)
                 {
                     tokens.Consume();
-                    id = tokens.Get(TokenType.Word);
+                    id = tokens.GetAny(TokenType.Word);
                 }
                 else
                 {

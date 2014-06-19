@@ -38,14 +38,14 @@ namespace NJade.Parser.Elements
         /// <returns>A new attribute.</returns>
         public static JElement Produce(TokenStream tokens)
         {
-            var name = tokens.Get(TokenType.Word);
+            var name = tokens.GetAny(TokenType.Word);
             if (!tokens.Is(JadeTokenType.Equals))
             {
                 tokens.RaiseUnexpectedToken();
             }
 
             tokens.Consume();
-            var value = tokens.Get(TokenType.QuotedString);
+            var value = tokens.GetAny(TokenType.QuotedString);
 
             return new JAttribute(name, value);
         }

@@ -81,6 +81,7 @@
     <Compile Include="Parser\Elements\JMixin.cs" />
     <Compile Include="Parser\Elements\JTag.cs" />
     <Compile Include="Parser\Elements\JText.cs" />
+    <Compile Include="Parser\IndentHierarchy.cs" />
     <Compile Include="Parser\ITemplate.cs" />
     <Compile Include="Parser\JadeParser.cs" />
     <Compile Include="Parser\Template.cs" />

@@ -1,5 +1,6 @@
 namespace NJade.Parser
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
@@ -44,6 +45,13 @@ namespace NJade.Parser
         /// Raises an unexpected token exception.
         /// </summary>
         /// <param name="tokens">The tokens.</param>
+        /// <exception cref="NJadeException">
+        /// Unexpected end of template.
+        /// or
+        /// Invalid token.
+        /// or
+        /// Unexpected token.
+        /// </exception>
         public static void RaiseUnexpectedToken(this TokenStream tokens)
         {
             if (tokens.IsAtEnd())
@@ -65,10 +73,40 @@ namespace NJade.Parser
         }
 
         /// <summary>
+        /// Determines whether the current token is of the specified token type.
+        /// </summary>
+        /// <param name="tokens">The tokens.</param>
+        /// <param name="tokenType">Type of the token.</param>
+        /// <returns>true if the current token matches; otherwise, false.</returns>
+        public static bool Is(this TokenStream tokens, TokenType tokenType)
+        {
+            return !tokens.IsAtEnd() && tokens.Current.With(t => t.TokenType == tokenType);
+        }
+
+        /// <summary>
+        /// Determines whether the current token is any of the supplied token types.
+        /// </summary>
+        /// <param name="tokens">The tokens.</param>
+        /// <param name="tokenTypes">The token types.</param>
+        /// <returns>true if the current token matches; otherwise, false.</returns>
+        public static bool IsAny(this TokenStream tokens, params TokenType[] tokenTypes)
+        {
+            tokenTypes.CheckNull("tokenTypes");
+            return !tokens.IsAtEnd() && tokens.Current.With(t => tokenTypes.Contains(t.TokenType));
+        }
+
+        /// <summary>
         /// Gets the value of the current token.
         /// </summary>
         /// <param name="tokens">The tokens.</param>
-        /// <returns>The value of the current token.</returns>
+        /// <returns>
+        /// The value of the current token.
+        /// </returns>
+        /// <exception cref="NJadeException">
+        /// Unexpected end of template.
+        /// or
+        /// Invalid token.
+        /// </exception>
         public static string Get(this TokenStream tokens)
         {
             if (tokens.IsAtEnd())
@@ -81,20 +119,29 @@ namespace NJade.Parser
                 throw new NJadeException("Invalid token.");
             }
 
-            var currentValue = tokens.Current.TokenValue;
+            var currentToken = tokens.Current;
             tokens.Consume();
-            return currentValue;
+            return currentToken.TokenValue;
         }
 
         /// <summary>
-        /// Gets the value of the current token if it matches the token type.
+        /// Gets the value of the current token if it matches any of the supplied token types.
         /// </summary>
         /// <param name="tokens">The tokens.</param>
-        /// <param name="tokenType">Type of the Tokens.</param>
-        /// <returns>The value of the current Tokens.</returns>
-        public static string Get(this TokenStream tokens, TokenType tokenType)
+        /// <param name="tokenTypes">The token types.</param>
+        /// <returns>
+        /// The value of the current token.
+        /// </returns>
+        /// <exception cref="NJadeException">
+        /// Unexpected end of template.
+        /// or
+        /// Invalid token.
+        /// or
+        /// Unexpected token.
+        /// </exception>
+        public static string GetAny(this TokenStream tokens, params TokenType[] tokenTypes)
         {
-            if (!tokens.Is(tokenType))
+            if (!tokens.IsAny(tokenTypes))
             {
                 tokens.RaiseUnexpectedToken();
             }
@@ -125,62 +172,47 @@ namespace NJade.Parser
         }
 
         /// <summary>
-        /// Consumes any of the supplied token types.
+        /// Gets the lines.
         /// </summary>
         /// <param name="tokens">The tokens.</param>
-        /// <param name="tokenTypes">The token types.</param>
-        public static void ConsumeAny(this TokenStream tokens, params TokenType[] tokenTypes)
+        /// <returns>A list of the lines.</returns>
+        public static List<TokenStream> GetLines(this TokenStream tokens)
         {
-            if (tokens.IsAny(tokenTypes))
-            {
-                tokens.Consume();
-            }
-            else
-            {
-                tokens.RaiseUnexpectedToken();
-            }
-        }
-
-        /// <summary>
-        /// Determines whether the current tokent is any of the supplied token types.
-        /// </summary>
-        /// <param name="tokens">The tokens.</param>
-        /// <param name="tokenTypes">The token types.</param>
-        /// <returns>true if the current token matches; otherwise, false.</returns>
-        public static bool IsAny(this TokenStream tokens, params TokenType[] tokenTypes)
-        {
-            return !tokens.IsAtEnd() && tokens.Current.With(t => tokenTypes.Contains(t.TokenType));
-        }
-
-        /// <summary>
-        /// Determines whether the current token is of the specified token type.
-        /// </summary>
-        /// <param name="tokens">The tokens.</param>
-        /// <param name="tokenType">Type of the token.</param>
-        /// <returns>true if the current token matches; otherwise, false.</returns>
-        public static bool Is(this TokenStream tokens, TokenType tokenType)
-        {
-            return !tokens.IsAtEnd() && tokens.Current.With(t => t.TokenType == tokenType);
-        }
-
-        /// <summary>
-        /// Peeks at the remaining tokens.
-        /// </summary>
-        /// <param name="tokens">The tokens.</param>
-        /// <returns>A list of tokens.</returns>
-        public static List<StringToken> PeekAtRemainingTokens(this TokenStream tokens)
-        {
-            var tokenList = new List<StringToken>();
-            tokens.TakeSnapshot();
-
+            var lines = new List<TokenStream>();
             while (!tokens.IsAtEnd())
             {
-                tokenList.Add(tokens.Current);
-                tokens.Consume();
+                lines.Add(tokens.GetLine());
             }
 
-            tokens.RollbackSnapshot();
-            return tokenList;
+            return lines;
+        }
+
+        /// <summary>
+        /// Gets the indent hierachy.
+        /// </summary>
+        /// <param name="tokens">The tokens.</param>
+        /// <returns>The indent hierarchy.</returns>
+        public static IndentHierarchy[] GetIndentHierachy(this TokenStream tokens)
+        {
+            Func<int> getCurrentIndent = () => tokens.Is(TokenType.WhiteSpace) ? tokens.Current.TokenValue.Length : 0;
+
+            var lines = new List<IndentHierarchy>();
+            var indent = getCurrentIndent();
+            while (!tokens.IsAtEnd())
+            {
+                var currentLine = tokens.GetLine();
+                var indentHierarchy = getCurrentIndent() > indent
+                                          ? new IndentHierarchy(currentLine, tokens.GetIndentHierachy())
+                                          : new IndentHierarchy(currentLine);
+                lines.Add(indentHierarchy);
+
+                if (getCurrentIndent() < indent)
+                {
+                    break;
+                }
+            }
+
+            return lines.ToArray();
         }
 
         /// <summary>
@@ -225,21 +257,25 @@ namespace NJade.Parser
             return items;
         }
 
-        /// <summary>
-        /// Gets the lines.
-        /// </summary>
-        /// <param name="tokens">The tokens.</param>
-        /// <returns>A list of the lines.</returns>
-        public static List<TokenStream> GetLines(this TokenStream tokens)
-        {
-            var lines = new List<TokenStream>();
-            while (!tokens.IsAtEnd())
-            {
-                lines.Add(tokens.GetLine());
-            }
+        /////// <summary>
+        /////// Peeks at the remaining tokens.
+        /////// </summary>
+        /////// <param name="tokens">The tokens.</param>
+        /////// <returns>A list of tokens.</returns>
+        ////public static List<StringToken> PeekAtRemainingTokens(this TokenStream tokens)
+        ////{
+        ////    var tokenList = new List<StringToken>();
+        ////    tokens.TakeSnapshot();
 
-            return lines;
-        }
+        ////    while (!tokens.IsAtEnd())
+        ////    {
+        ////        tokenList.Add(tokens.Current);
+        ////        tokens.Consume();
+        ////    }
+
+        ////    tokens.RollbackSnapshot();
+        ////    return tokenList;
+        ////}
 
         ////    /// <summary>
         ////    /// Gets the child tokens.

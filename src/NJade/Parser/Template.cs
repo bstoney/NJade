@@ -47,8 +47,8 @@ namespace NJade.Parser
             if (tokens.Is(JadeTokenType.Doctype))
             {
                 tokens.Consume();
-                tokens.ConsumeAny(TokenType.WhiteSpace);
-                docType = new DocType(tokens.Get(TokenType.Word));
+                tokens.GetAny(TokenType.WhiteSpace);
+                docType = new DocType(tokens.GetAny(TokenType.Word));
                 tokens.GetLine();
             }
 

@@ -75,10 +75,12 @@
     <Compile Include="Lexer\JadeLexerTests.cs" />
     <Compile Include="NJadeExceptionTests.cs" />
     <Compile Include="Parser\TokenStreamExtensionsTests.cs" />
+    <Compile Include="Parser\IndentHierarchyTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Renderer\StringRendererTests.cs" />
     <Compile Include="Renderer\XmlWriterTests.cs" />
     <Compile Include="TestHelper\ExpectedExceptionMessageAttribute.cs" />
+    <Compile Include="TestHelper\TokenStreamExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

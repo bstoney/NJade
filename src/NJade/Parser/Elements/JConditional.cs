@@ -50,8 +50,8 @@ namespace NJade.Parser.Elements
         /// </returns>
         public static JElement Produce(TokenStream tokens, int indent)
         {
-            tokens.Get(JadeTokenType.If);
-            tokens.Get(TokenType.WhiteSpace);
+            tokens.GetAny(JadeTokenType.If);
+            tokens.GetAny(TokenType.WhiteSpace);
             var expression = new JExpression(tokens.GetLine().AsString());
             var trueElements = tokens.GetItems(indent).ToList();
             var falseElements = Enumerable.Empty<JElement>();
