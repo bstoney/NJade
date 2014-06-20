@@ -10,16 +10,16 @@ namespace NJade.Parser
     public interface ITemplate
     {
         /// <summary>
-        /// Gets or sets the type of the document.
+        /// Gets the type of the document.
         /// </summary>
         /// <value>
         /// The type of the document.
         /// </value>
-        DocType DocType { get; set; }
+        DocType DocType { get; }
 
         /// <summary>
-        /// Gets or sets the elements.
+        /// Gets the elements.
         /// </summary>
-        List<JElement> Elements { get; set; }
+        List<JElement> Elements { get; }
     }
 }

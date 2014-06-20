@@ -16,7 +16,7 @@ namespace NJade.Render
     /// <summary>
     /// Custom XmlWriter to allow writing to document fragments to different files.
     /// </summary>
-    internal sealed class XmlWriter : IDisposable
+    internal sealed class XmlWriter : IXmlWriter
     {
         /// <summary>
         /// A map of invalid XML characters to their replacements.

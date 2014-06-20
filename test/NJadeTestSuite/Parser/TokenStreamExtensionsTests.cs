@@ -193,7 +193,7 @@
                                        new StringToken(TokenType.Word, 1, 1, 1, "hello")
                                    });
             tokens.CallBase = true;
-            CollectionAssert.AreEqual(lineTokens, tokens.Object.GetLine().GetAll());
+            CollectionAssert.AreEqual(lineTokens, tokens.Object.GetLine());
             tokens.Verify(t => t.Consume(), Times.Exactly(3));
         }
 
@@ -210,7 +210,7 @@
                                    };
             var tokens = new Mock<TokenStream>((IEnumerable<StringToken>)lineTokens);
             tokens.CallBase = true;
-            CollectionAssert.AreEqual(lineTokens, tokens.Object.GetLine().GetAll());
+            CollectionAssert.AreEqual(lineTokens, tokens.Object.GetLine());
             tokens.Verify(t => t.Consume(), Times.Exactly(2));
         }
 
@@ -353,87 +353,20 @@
         /// Tests that the token stream extensions should return an empty list when trying to get lines and the stream is empty.
         /// </summary>
         [TestMethod]
-        public void ShouldReturnAnEmptyListWhenTryingToGetLinesAndTheStreamIsEmpty()
+        public void ShouldReturnAnEmptyListWhenTryingToGetIndentHierarchyAndTheStreamIsEmpty()
         {
             var tokens = new Mock<TokenStream>(Enumerable.Empty<StringToken>());
             tokens.Setup(t => t.IsAtEnd()).Returns(true);
             var lines = tokens.Object.GetLines();
             Assert.IsNotNull(lines);
-            Assert.AreEqual(0, lines.Count);
+            Assert.AreEqual(0, lines.GetAll().Count);
         }
 
         /// <summary>
-        /// Tests that the token stream extensions should get every line until the stream is empty.
+        /// Tests that the token stream extensions should get lines as siblings when getting lines and they have the same indent.
         /// </summary>
         [TestMethod]
-        public void ShouldGetEveryLineUntilTheStreamIsEmpty()
-        {
-            var expectedLines = new[]
-                                    {
-                                        new[]
-                                            {
-                                                new StringToken(TokenType.Word, 1, 1, 1, "hello"),
-                                                new StringToken(TokenType.WhiteSpace, 1, 1, 1, "hello")
-                                            },
-                                        new[]
-                                            {
-                                                new StringToken(TokenType.Word, 1, 1, 1, "hello"),
-                                                new StringToken(TokenType.WhiteSpace, 1, 1, 1, "hello")
-                                            }
-                                    };
-            var tokens = new Mock<TokenStream>((IEnumerable<StringToken>)new[]
-                        {
-                            new StringToken(TokenType.Word, 1, 1, 1, "hello"),
-                            new StringToken(TokenType.WhiteSpace, 1, 1, 1, "hello"),
-                            new StringToken(JadeTokenType.NewLine, 1, 1, 1, "hello"),
-                            new StringToken(TokenType.Word, 1, 1, 1, "hello"),
-                            new StringToken(TokenType.WhiteSpace, 1, 1, 1, "hello")
-                        });
-            tokens.CallBase = true;
-            var lines = tokens.Object.GetLines();
-            Assert.AreEqual(2, lines.Count);
-            CollectionAssert.AreEqual(expectedLines[0], lines[0].GetAll());
-            CollectionAssert.AreEqual(expectedLines[1], lines[1].GetAll());
-        }
-
-        /// <summary>
-        /// Tests that the token stream extensions should get blank lines when getting every line.
-        /// </summary>
-        [TestMethod]
-        public void ShouldGetBlankLinesWhenGettingEveryLine()
-        {
-            var tokens = new Mock<TokenStream>((IEnumerable<StringToken>)new[]
-                        {
-                            new StringToken(TokenType.Word, 1, 1, 1, "hello"),
-                            new StringToken(TokenType.WhiteSpace, 1, 1, 1, "hello"),
-                            new StringToken(JadeTokenType.NewLine, 1, 1, 1, "hello"),
-                            new StringToken(JadeTokenType.NewLine, 1, 1, 1, "hello")
-                        });
-            tokens.CallBase = true;
-            var lines = tokens.Object.GetLines();
-            Assert.AreEqual(2, lines.Count);
-            Assert.IsFalse(lines[0].IsAtEnd());
-            Assert.IsTrue(lines[1].IsAtEnd());
-        }
-
-        /// <summary>
-        /// Tests that the token stream extensions should return an empty list when trying to get indent hierarchy and the stream is empty.
-        /// </summary>
-        [TestMethod]
-        public void ShouldReturnAnEmptyListWhenTryingToGetIndentHierarchyAndTheStreamIsEmpty()
-        {
-            var tokens = new Mock<TokenStream>(Enumerable.Empty<StringToken>());
-            tokens.Setup(t => t.IsAtEnd()).Returns(true);
-            var hierarchy = tokens.Object.GetIndentHierachy();
-            Assert.IsNotNull(hierarchy);
-            Assert.AreEqual(0, hierarchy.Length);
-        }
-
-        /// <summary>
-        /// Tests that the token stream extensions should get lines as siblings when getting the indent hierarchy and they have the same indent.
-        /// </summary>
-        [TestMethod]
-        public void ShouldGetLinesAsSiblingsWhenGettingTheIndentHierarchyAndTheyHaveTheSameIndent()
+        public void ShouldGetLinesAsSiblingsWhenGettingLinesAndTheyHaveTheSameIndent()
         {
             var tokens = new Mock<TokenStream>((IEnumerable<StringToken>)new[]
                         {
@@ -445,15 +378,15 @@
                             new StringToken(JadeTokenType.NewLine, 1, 1, 1)
                         });
             tokens.CallBase = true;
-            var hierachy = tokens.Object.GetIndentHierachy();
-            Assert.AreEqual(2, hierachy.Length);
+            var lines = tokens.Object.GetLines();
+            Assert.AreEqual(2, lines.GetAll().Count);
         }
 
         /// <summary>
-        /// Tests that the token stream extensions should treat no white space and white space with zero length as equal when getting the indent hierarchy.
+        /// Tests that the token stream extensions should treat no white space and white space with zero length as equal when getting lines.
         /// </summary>
         [TestMethod]
-        public void ShouldTreatNoWhiteSpaceAndWhiteSpaceWithZeroLengthAsEqualWhenGettingTheIndentHierarchy()
+        public void ShouldTreatNoWhiteSpaceAndWhiteSpaceWithZeroLengthAsEqualWhenGettingLines()
         {
             var tokens = new Mock<TokenStream>((IEnumerable<StringToken>)new[]
                         {
@@ -464,15 +397,15 @@
                             new StringToken(JadeTokenType.NewLine, 1, 1, 1)
                         });
             tokens.CallBase = true;
-            var hierachy = tokens.Object.GetIndentHierachy();
-            Assert.AreEqual(2, hierachy.Length);
+            var lines = tokens.Object.GetLines();
+            Assert.AreEqual(2, lines.GetAll().Count);
         }
 
         /// <summary>
-        /// Tests that the token stream extensions should treat a line starting with more white space as a child when getting the indent hierarchy.
+        /// Tests that the token stream extensions should treat a line starting with more white space as a child when getting lines.
         /// </summary>
         [TestMethod]
-        public void ShouldTreatALineStartingWithMoreWhiteSpaceAsAChildWhenGettingTheIndentHierarchy()
+        public void ShouldTreatALineStartingWithMoreWhiteSpaceAsAChildWhenGettingLines()
         {
             var tokens = new Mock<TokenStream>((IEnumerable<StringToken>)new[]
                         {
@@ -484,16 +417,16 @@
                             new StringToken(JadeTokenType.NewLine, 1, 1, 1)
                         });
             tokens.CallBase = true;
-            var hierachy = tokens.Object.GetIndentHierachy();
+            var hierachy = tokens.Object.GetLines().GetHierarchy();
             Assert.AreEqual(1, hierachy.Length);
-            Assert.AreEqual(1, hierachy[0].Children.Count());
+            Assert.AreEqual(1, hierachy[0].Children.Length);
         }
 
         /// <summary>
-        /// Tests that the token stream extensions should get all children when getting the indent hierarchy.
+        /// Tests that the token stream extensions should get all children when getting lines.
         /// </summary>
         [TestMethod]
-        public void ShouldGetAllChildrenWhenGettingTheIndentHierarchy()
+        public void ShouldGetAllChildrenWhenGettingLines()
         {
             var tokens = new Mock<TokenStream>((IEnumerable<StringToken>)new[]
                         {
@@ -508,16 +441,16 @@
                             new StringToken(JadeTokenType.NewLine, 1, 1, 1)
                         });
             tokens.CallBase = true;
-            var hierachy = tokens.Object.GetIndentHierachy();
+            var hierachy = tokens.Object.GetLines().GetHierarchy();
             Assert.AreEqual(1, hierachy.Length);
-            Assert.AreEqual(2, hierachy[0].Children.Count());
+            Assert.AreEqual(2, hierachy[0].Children.Length);
         }
 
         /// <summary>
-        /// Tests that the token stream extensions should stop getting children when getting the indent hierarchy and a sibling is found.
+        /// Tests that the token stream extensions should stop getting children when getting lines and a sibling is found.
         /// </summary>
         [TestMethod]
-        public void ShouldStopGettingChildrenWhenGettingTheIndentHierarchyAndASiblingIsFound()
+        public void ShouldStopGettingChildrenWhenGettingLinesAndASiblingIsFound()
         {
             var tokens = new Mock<TokenStream>((IEnumerable<StringToken>)new[]
                         {
@@ -532,16 +465,16 @@
                             new StringToken(JadeTokenType.NewLine, 1, 1, 1)
                         });
             tokens.CallBase = true;
-            var hierachy = tokens.Object.GetIndentHierachy();
+            var hierachy = tokens.Object.GetLines().GetHierarchy();
             Assert.AreEqual(2, hierachy.Length);
             Assert.AreEqual(1, hierachy[0].Children.Length);
         }
 
         /// <summary>
-        /// Tests that the token stream extensions should recursivly get all children when getting the indent hierarchy.
+        /// Tests that the token stream extensions should recursivly get all children when getting lines.
         /// </summary>
         [TestMethod]
-        public void ShouldRecursivlyGetAllChildrenWhenGettingTheIndentHierarchy()
+        public void ShouldRecursivlyGetAllChildrenWhenGettingLines()
         {
             var tokens = new Mock<TokenStream>((IEnumerable<StringToken>)new[]
                         {
@@ -556,7 +489,8 @@
                             new StringToken(JadeTokenType.NewLine, 1, 1, 1)
                         });
             tokens.CallBase = true;
-            var hierachy = tokens.Object.GetIndentHierachy();
+            var hierachy = tokens.Object.GetLines().GetHierarchy();
+
             Assert.AreEqual(1, hierachy.Length);
             Assert.AreEqual(1, hierachy[0].Children.Length);
             Assert.AreEqual(1, hierachy[0].Children[0].Children.Length);

@@ -11,6 +11,6 @@
         /// Renders the element to the specified writer.
         /// </summary>
         /// <param name="writer">The writer.</param>
-        internal abstract void Render(XmlWriter writer);
+        internal abstract void Render(IXmlWriter writer);
     }
 }

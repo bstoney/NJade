@@ -1,10 +1,8 @@
 namespace NJade.Parser
 {
     using System.Collections.Generic;
-    using System.Linq;
+    using System.Monads;
 
-    using NJade.Lexer;
-    using NJade.Lexer.Tokenizer;
     using NJade.Parser.Elements;
 
     /// <summary>
@@ -17,42 +15,22 @@ namespace NJade.Parser
         /// </summary>
         /// <param name="docType">Type of the document.</param>
         /// <param name="elements">The elements.</param>
-        private Template(DocType docType, List<JElement> elements)
+        public Template(DocType docType, List<JElement> elements)
         {
+            elements.CheckNull("elements");
+
             this.DocType = docType;
             this.Elements = elements;
         }
 
         /// <summary>
-        /// Gets or sets the type of the document.
+        /// Gets the type of the document.
         /// </summary>
-        /// <value>
-        /// The type of the document.
-        /// </value>
-        public DocType DocType { get; set; }
+        public DocType DocType { get; private set; }
 
         /// <summary>
-        /// Gets or sets the elements.
+        /// Gets the elements.
         /// </summary>
-        public List<JElement> Elements { get; set; }
-
-        /// <summary>
-        /// Produces the specified tokens.
-        /// </summary>
-        /// <param name="tokens">The tokens.</param>
-        /// <returns>A new template.</returns>
-        public static Template Produce(TokenStream tokens)
-        {
-            DocType docType = null;
-            if (tokens.Is(JadeTokenType.Doctype))
-            {
-                tokens.Consume();
-                tokens.GetAny(TokenType.WhiteSpace);
-                docType = new DocType(tokens.GetAny(TokenType.Word));
-                tokens.GetLine();
-            }
-
-            return new Template(docType, tokens.GetItems(null).ToList());
-        }
+        public List<JElement> Elements { get; private set; }
     }
 }

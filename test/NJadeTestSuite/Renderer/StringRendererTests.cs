@@ -41,7 +41,7 @@
 
             renderer.Render();
 
-            docType.Verify(d => d.Render(It.IsAny<XmlWriter>()), Times.Once);
+            docType.Verify(d => d.Render(It.IsAny<IXmlWriter>()), Times.Once);
         }
 
         /// <summary>
@@ -57,8 +57,8 @@
 
             renderer.Render();
 
-            Mock.Get(element1).Verify(e => e.Render(It.IsAny<XmlWriter>()), Times.Once);
-            Mock.Get(element2).Verify(e => e.Render(It.IsAny<XmlWriter>()), Times.Once);
+            Mock.Get(element1).Verify(e => e.Render(It.IsAny<IXmlWriter>()), Times.Once);
+            Mock.Get(element2).Verify(e => e.Render(It.IsAny<IXmlWriter>()), Times.Once);
         }
 
         /// <summary>

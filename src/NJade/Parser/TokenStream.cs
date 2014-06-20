@@ -2,6 +2,7 @@ namespace NJade.Parser
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System.Monads;
 
     using NJade.Lexer.Tokenizer;
     using NJade.Lexer.Tokenizer.Strings;
@@ -16,8 +17,9 @@ namespace NJade.Parser
         /// </summary>
         /// <param name="tokens">The tokens.</param>
         public TokenStream(IEnumerable<StringToken> tokens)
-            : base(tokens.ToList)
+            : base((tokens ?? Enumerable.Empty<StringToken>()).ToList)
         {
+            tokens.CheckNull("tokens");
         }
 
         /////// <summary>

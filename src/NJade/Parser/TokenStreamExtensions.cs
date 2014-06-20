@@ -3,7 +3,6 @@ namespace NJade.Parser
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Linq.Expressions;
     using System.Monads;
     using System.Text;
 
@@ -39,6 +38,16 @@ namespace NJade.Parser
             }
 
             return sb.ToString();
+        }
+
+        /// <summary>
+        /// Converts a list of tokens into a stream.
+        /// </summary>
+        /// <param name="tokens">The tokens.</param>
+        /// <returns>A new token stream.</returns>
+        public static TokenStream AsTokenStream(this IEnumerable<StringToken> tokens)
+        {
+            return new TokenStream(tokens);
         }
 
         /// <summary>
@@ -153,8 +162,8 @@ namespace NJade.Parser
         /// Gets all the tokens up to the end of the line.
         /// </summary>
         /// <param name="tokens">The tokens.</param>
-        /// <returns>The value of all the tokens in the line.</returns>
-        public static TokenStream GetLine(this TokenStream tokens)
+        /// <returns>A list all the tokens in the line.</returns>
+        public static List<StringToken> GetLine(this TokenStream tokens)
         {
             var line = new List<StringToken>();
             while (!tokens.IsAtEnd() && !tokens.Is(JadeTokenType.NewLine))
@@ -168,23 +177,7 @@ namespace NJade.Parser
                 tokens.Consume();
             }
 
-            return new TokenStream(line);
-        }
-
-        /// <summary>
-        /// Gets the lines.
-        /// </summary>
-        /// <param name="tokens">The tokens.</param>
-        /// <returns>A list of the lines.</returns>
-        public static List<TokenStream> GetLines(this TokenStream tokens)
-        {
-            var lines = new List<TokenStream>();
-            while (!tokens.IsAtEnd())
-            {
-                lines.Add(tokens.GetLine());
-            }
-
-            return lines;
+            return line;
         }
 
         /// <summary>
@@ -192,70 +185,76 @@ namespace NJade.Parser
         /// </summary>
         /// <param name="tokens">The tokens.</param>
         /// <returns>The indent hierarchy.</returns>
-        public static IndentHierarchy[] GetIndentHierachy(this TokenStream tokens)
+        public static TokenLineStream GetLines(this TokenStream tokens)
         {
             Func<int> getCurrentIndent = () => tokens.Is(TokenType.WhiteSpace) ? tokens.Current.TokenValue.Length : 0;
+            Func<TokenLine[]> getLines = null;
 
-            var lines = new List<IndentHierarchy>();
-            var indent = getCurrentIndent();
-            while (!tokens.IsAtEnd())
-            {
-                var currentLine = tokens.GetLine();
-                var indentHierarchy = getCurrentIndent() > indent
-                                          ? new IndentHierarchy(currentLine, tokens.GetIndentHierachy())
-                                          : new IndentHierarchy(currentLine);
-                lines.Add(indentHierarchy);
-
-                if (getCurrentIndent() < indent)
+            getLines = () =>
                 {
-                    break;
-                }
-            }
+                    var lines = new List<TokenLine>();
+                    var indent = getCurrentIndent();
+                    while (!tokens.IsAtEnd())
+                    {
+                        var currentLine = tokens.GetLine();
+                        var indentHierarchy = getCurrentIndent() > indent
+                                                  ? new TokenLine(currentLine, getLines())
+                                                  : new TokenLine(currentLine);
+                        lines.Add(indentHierarchy);
 
-            return lines.ToArray();
+                        if (getCurrentIndent() < indent)
+                        {
+                            break;
+                        }
+                    }
+
+                    return lines.ToArray();
+                };
+
+            return new TokenLineStream(getLines());
         }
 
-        /// <summary>
-        /// Gets all the elements where the intent is greated than the indent supplied.
-        /// </summary>
-        /// <param name="tokens">The tokens.</param>
-        /// <param name="indent">The indent.</param>
-        /// <returns>A list of jade elements.</returns>
-        public static List<JElement> GetItems(this TokenStream tokens, int? indent)
-        {
-            var items = new List<JElement>();
-            while (!tokens.IsAtEnd()
-                   && (indent == null || (tokens.Is(TokenType.WhiteSpace) && tokens.Current.TokenValue.Length > indent)))
-            {
-                var thisIndent = 0;
-                if (tokens.Current.TokenType == TokenType.WhiteSpace)
-                {
-                    thisIndent = tokens.Get().Length;
-                }
+        /////// <summary>
+        /////// Gets all the elements where the intent is greated than the indent supplied.
+        /////// </summary>
+        /////// <param name="tokens">The tokens.</param>
+        /////// <param name="indent">The indent.</param>
+        /////// <returns>A list of jade elements.</returns>
+        ////public static List<JElement> GetItems(this TokenStream tokens, int? indent)
+        ////{
+        ////    var items = new List<JElement>();
+        ////    while (!tokens.IsAtEnd()
+        ////           && (indent == null || (tokens.Is(TokenType.WhiteSpace) && tokens.Current.TokenValue.Length > indent)))
+        ////    {
+        ////        var thisIndent = 0;
+        ////        if (tokens.Current.TokenType == TokenType.WhiteSpace)
+        ////        {
+        ////            thisIndent = tokens.Get().Length;
+        ////        }
 
-                if (tokens.Is(JadeTokenType.NewLine))
-                {
-                    tokens.Consume();
-                    continue;
-                }
+        ////        if (tokens.Is(JadeTokenType.NewLine))
+        ////        {
+        ////            tokens.Consume();
+        ////            continue;
+        ////        }
 
-                if (tokens.Is(JadeTokenType.If))
-                {
-                    items.Add(JConditional.Produce(tokens, thisIndent));
-                    continue;
-                }
+        ////        if (tokens.Is(JadeTokenType.If))
+        ////        {
+        ////            items.Add(JConditional.Produce(tokens, thisIndent));
+        ////            continue;
+        ////        }
 
-                var element = JTag.Produce(tokens, thisIndent);
-                if (element == null)
-                {
-                    tokens.RaiseUnexpectedToken();
-                }
+        ////        var element = JTag.Produce(tokens, thisIndent);
+        ////        if (element == null)
+        ////        {
+        ////            tokens.RaiseUnexpectedToken();
+        ////        }
 
-                items.Add(element);
-            }
+        ////        items.Add(element);
+        ////    }
 
-            return items;
-        }
+        ////    return items;
+        ////}
 
         /////// <summary>
         /////// Peeks at the remaining tokens.
