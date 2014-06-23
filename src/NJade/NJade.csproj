@@ -69,7 +69,13 @@
     <Compile Include="Lexer\Tokenizer\TokenType.cs" />
     <Compile Include="NJadeException.cs" />
     <Compile Include="Parser\Elements\DocType.cs" />
+    <Compile Include="Parser\Elements\JAttribute.cs" />
     <Compile Include="Parser\Elements\JElement.cs" />
+    <Compile Include="Parser\Elements\JTag.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Parser\Parsers\IParser.cs" />
+    <Compile Include="Parser\Parsers\JTagParser.cs" />
     <Compile Include="Parser\TokenLine.cs" />
     <Compile Include="Parser\ITemplate.cs" />
     <Compile Include="Parser\JadeParser.cs" />

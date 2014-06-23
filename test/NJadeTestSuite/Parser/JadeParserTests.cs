@@ -18,7 +18,7 @@ namespace NJadeTestSuite.Parser
         public void ShouldReturnANewTemplateWhenParsingAString()
         {
             var jadeParser = new JadeParser();
-            var template = jadeParser.Parse("a string");
+            var template = jadeParser.Parse(".aString");
             Assert.IsNotNull(template);
         }
 

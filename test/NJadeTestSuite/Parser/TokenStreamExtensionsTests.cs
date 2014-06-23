@@ -239,6 +239,30 @@
         }
 
         /// <summary>
+        /// Tests that the token stream extensions should call consume when consuming any and the token is any of the token types specified.
+        /// </summary>
+        [TestMethod]
+        public void ShouldCallConsumeWhenConsumingAnyAndTheTokenIsAnyOfTheTokenTypesSpecified()
+        {
+            var tokens = new Mock<TokenStream>(Enumerable.Empty<StringToken>());
+            tokens.Setup(t => t.Current).Returns(new StringToken(TokenType.Word, 1, 1, 1, "hello"));
+            tokens.Object.ConsumeAny(TokenType.WhiteSpace, TokenType.Word);
+            tokens.Verify(t => t.Consume(), Times.Once);
+        }
+
+        /// <summary>
+        /// Tests that the token stream extensions should not call consume when consuming any and the token is not any of the token types specified.
+        /// </summary>
+        [TestMethod]
+        public void ShouldNotCallConsumeWhenConsumingAnyAndTheTokenIsNotAnyOfTheTokenTypesSpecified()
+        {
+            var tokens = new Mock<TokenStream>(Enumerable.Empty<StringToken>());
+            tokens.Setup(t => t.Current).Returns(new StringToken(TokenType.Word, 1, 1, 1, "hello"));
+            tokens.Object.ConsumeAny(TokenType.WhiteSpace, TokenType.QuotedString);
+            tokens.Verify(t => t.Consume(), Times.Never);
+        }
+
+        /// <summary>
         /// Tests that the token extensions should return true when the token is any of the token types specified.
         /// </summary>
         [TestMethod]

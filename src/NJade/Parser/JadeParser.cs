@@ -6,6 +6,7 @@
     using NJade.Lexer;
     using NJade.Lexer.Tokenizer;
     using NJade.Parser.Elements;
+    using NJade.Parser.Parsers;
 
     /// <summary>
     /// Defines the Parser class.
@@ -53,14 +54,21 @@
         /// <returns>An element if one is found; otherwise, null.</returns>
         private JElement ParseNextElement(TokenLineStream lines)
         {
-            TokenLine tokens = lines.Current;
-            tokens.GetAny(TokenType.WhiteSpace);
+            var tokens = lines.Current;
+            lines.Consume();
+            tokens.ConsumeAny(TokenType.WhiteSpace);
+
+            IParser parser = new JTagParser();
+            if (parser.CanParse(tokens))
+            {
+                return parser.Parse(tokens);
+            }
+            
             if (!tokens.Is(JadeTokenType.NewLine))
             {
                 tokens.RaiseUnexpectedToken();
             }
 
-            lines.Consume();
             return null;
         }
     }

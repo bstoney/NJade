@@ -32,29 +32,10 @@ namespace NJade.Parser.Elements
         public string Value { get; private set; }
 
         /// <summary>
-        /// Produces the specified tokens.
-        /// </summary>
-        /// <param name="tokens">The tokens.</param>
-        /// <returns>A new attribute.</returns>
-        public static JElement Produce(TokenStream tokens)
-        {
-            var name = tokens.GetAny(TokenType.Word);
-            if (!tokens.Is(JadeTokenType.Equals))
-            {
-                tokens.RaiseUnexpectedToken();
-            }
-
-            tokens.Consume();
-            var value = tokens.GetAny(TokenType.QuotedString);
-
-            return new JAttribute(name, value);
-        }
-
-        /// <summary>
         /// Renders the element to the specified writer.
         /// </summary>
         /// <param name="writer">The writer.</param>
-        internal override void Render(XmlWriter writer)
+        internal override void Render(IXmlWriter writer)
         {
             writer.WriteAttributeString(this.Name, this.Value);
         }

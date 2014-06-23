@@ -159,6 +159,19 @@ namespace NJade.Parser
         }
 
         /// <summary>
+        /// Consumes the next token if it matches any of the supplied token types.
+        /// </summary>
+        /// <param name="tokens">The tokens.</param>
+        /// <param name="tokenTypes">The token types.</param>
+        public static void ConsumeAny(this TokenStream tokens, params TokenType[] tokenTypes)
+        {
+            if (tokens.IsAny(tokenTypes))
+            {
+                tokens.Consume();
+            }
+        }
+
+        /// <summary>
         /// Gets all the tokens up to the end of the line.
         /// </summary>
         /// <param name="tokens">The tokens.</param>
