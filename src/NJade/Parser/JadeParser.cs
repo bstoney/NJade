@@ -23,6 +23,8 @@
 
             var lexer = new JadeLexer(jade);
             var rawTokens = new TokenStream(lexer.Tokenize());
+            var elementParser = new ElementParser();
+
             var lines = rawTokens.GetLines();
 
             DocType docType = null;
@@ -40,36 +42,11 @@
 
                 while (!lines.IsAtEnd())
                 {
-                    this.ParseNextElement(lines).Do(elements.Add);
+                    elementParser.ParseNextElement(lines).Do(elements.Add);
                 }
             }
 
             return new Template(docType, elements);
-        }
-
-        /// <summary>
-        /// Parses the next element.
-        /// </summary>
-        /// <param name="lines">The lines.</param>
-        /// <returns>An element if one is found; otherwise, null.</returns>
-        private JElement ParseNextElement(TokenLineStream lines)
-        {
-            var tokens = lines.Current;
-            lines.Consume();
-            tokens.ConsumeAny(TokenType.WhiteSpace);
-
-            IParser parser = new JTagParser();
-            if (parser.CanParse(tokens))
-            {
-                return parser.Parse(tokens);
-            }
-            
-            if (!tokens.Is(JadeTokenType.NewLine))
-            {
-                tokens.RaiseUnexpectedToken();
-            }
-
-            return null;
         }
     }
 }

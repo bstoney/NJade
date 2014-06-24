@@ -9,9 +9,9 @@
     using NJade.Parser.Elements;
 
     /// <summary>
-    /// Defines the JTagParser class.
+    /// Defines the TagParser class.
     /// </summary>
-    internal class JTagParser : IParser
+    internal class TagParser : IParser
     {
         /// <summary>
         /// The attributes.
@@ -47,7 +47,7 @@
         /// </returns>
         public bool CanParse(TokenStream tokens)
         {
-            return tokens.IsAny(TokenType.Word, JadeTokenType.Dot, JadeTokenType.HashTag);
+            return tokens.IsAny(TokenType.Word, JadeTokenType.Dot, JadeTokenType.Hash);
         }
 
         /// <summary>
@@ -114,7 +114,7 @@
         /// <param name="tokens">The tokens.</param>
         private void ParseClasses(TokenStream tokens)
         {
-            while (tokens.IsAny(JadeTokenType.Dot, JadeTokenType.HashTag))
+            while (tokens.IsAny(JadeTokenType.Dot, JadeTokenType.Hash))
             {
                 if (tokens.Is(JadeTokenType.Dot))
                 {

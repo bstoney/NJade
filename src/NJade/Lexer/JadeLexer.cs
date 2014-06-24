@@ -45,7 +45,7 @@
                                             new MatchKeyword(JadeTokenType.Plus, "+"),
                                             new MatchKeyword(JadeTokenType.InlineValue, "= "),
                                             new MatchKeyword(JadeTokenType.Equals, "="),
-                                            new MatchKeyword(JadeTokenType.HashTag, "#"),
+                                            new MatchKeyword(JadeTokenType.Hash, "#"),
                                             new MatchKeyword(JadeTokenType.Comma, ","),
                                             new MatchKeyword(JadeTokenType.OpenParenth, "("),
                                             new MatchKeyword(JadeTokenType.CloseParenth, ")"),

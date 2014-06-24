@@ -75,6 +75,8 @@
     <Compile Include="Lexer\JadeLexerTests.cs" />
     <Compile Include="NJadeExceptionTests.cs" />
     <Compile Include="Parser\Elements\DocTypeTests.cs" />
+    <Compile Include="Parser\Parsers\ElementParserTests.cs" />
+    <Compile Include="Parser\Parsers\TagParserTests.cs" />
     <Compile Include="Parser\TokenStreamExtensionsTests.cs" />
     <Compile Include="Parser\TokenLineTests.cs" />
     <Compile Include="Parser\TokenLineStreamTests.cs" />

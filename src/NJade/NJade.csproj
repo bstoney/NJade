@@ -75,7 +75,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Parser\Parsers\IParser.cs" />
-    <Compile Include="Parser\Parsers\JTagParser.cs" />
+    <Compile Include="Parser\Parsers\ElementParser.cs" />
+    <Compile Include="Parser\Parsers\TagParser.cs" />
     <Compile Include="Parser\TokenLine.cs" />
     <Compile Include="Parser\ITemplate.cs" />
     <Compile Include="Parser\JadeParser.cs" />

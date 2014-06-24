@@ -1,8 +1,5 @@
 namespace NJade.Parser.Elements
 {
-    using Lexer;
-
-    using NJade.Lexer.Tokenizer;
     using NJade.Render;
 
     /// <summary>

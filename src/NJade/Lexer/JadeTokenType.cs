@@ -15,7 +15,7 @@
         /// <summary>
         /// The hash tag
         /// </summary>
-        public static readonly TokenType HashTag = new TokenType("HashTag");
+        public static readonly TokenType Hash = new TokenType("Hash");
 
         /// <summary>
         /// The dot
